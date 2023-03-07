@@ -1,0 +1,9 @@
+---
+  - name: Configure banner playbook
+    hosts: switches
+    tasks:
+    - name: Configure banner task
+      cisco.ios.ios_banner:
+        banner: login
+        text: "{{ banner_text }}"
+        state: present
