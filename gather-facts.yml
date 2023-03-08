@@ -1,0 +1,12 @@
+---
+  - name: Test Ansible playbook
+    hosts: switches
+    
+    tasks:
+    - name: Gather info
+      cisco.ios.ios_facts:
+        gather_subset: all
+      register: facts
+    - name: Output info
+      debug:
+        var: facts
