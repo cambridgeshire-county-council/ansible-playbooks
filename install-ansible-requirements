@@ -1,0 +1,8 @@
+---
+  - name: Install ansible requirements
+    hosts: localhost
+    connection: local
+    tasks:
+    - name: Install ansible-pylibssh python package
+      ansible.builtin.pip:
+        name: ansible-pylibssh
