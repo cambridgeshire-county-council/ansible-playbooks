@@ -1,7 +1,7 @@
 ---
 # Ansible Playbook to upgrade Cisco IOS 
 
-- name: Upgrade CISCO IOS 
+- name: Check CISCO IOS version
   hosts: switches
 
   vars: 
