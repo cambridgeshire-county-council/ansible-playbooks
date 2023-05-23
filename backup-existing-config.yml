@@ -24,7 +24,7 @@
 
 ## Backup Running Config 
 
-- hosts: SWITCHES 
+- hosts: switches 
 
   tasks:
    - name: Backup Running Config  
