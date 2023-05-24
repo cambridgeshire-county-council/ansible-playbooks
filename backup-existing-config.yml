@@ -2,9 +2,7 @@
 # Ansible Playbook to upgrade Cisco IOS 
 
 - name: Backup existing config
-## Create backup folder for today 
-
-- hosts: localhost
+  hosts: localhost
 
   tasks:
    - name: Get ansible date/time facts
