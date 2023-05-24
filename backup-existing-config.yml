@@ -10,6 +10,15 @@
        commands: show run  
      register: config
 
+   - name: Get ansible date/time facts
+     setup:
+       filter: "ansible_date_time"
+       gather_subset: "!all"
+
+   - name: Store DTG as fact
+     set_fact:
+       DTG: "{{ ansible_date_time.date }}"
+
    - name: Save output to ~/network-programmability/backups/
      copy:
        content: "{{config.stdout[0]}}"
