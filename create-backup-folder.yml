@@ -2,7 +2,7 @@
 # Ansible Playbook to upgrade Cisco IOS 
 
 - name: Create backup folder
-  hosts: local
+  hosts: localhost
   connection: local
 
   tasks:
@@ -17,7 +17,7 @@
 
    - name: Create Directory {{hostvars.localhost.DTG}}
      file:
-      path: ~/network-programmability/backups/{{hostvars.local.DTG}}
+      path: ~/network-programmability/backups/{{hostvars.localhost.DTG}}
       state: directory
   run_once: true
 
