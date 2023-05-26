@@ -5,7 +5,7 @@
   hosts: switches
 
   vars: 
-    upgrade_ios_version: 12.2(55)SE12
+    upgrade_ios_version: 1.1.1
 
   tasks:
     - name: CHECK CURRENT VERSION
@@ -14,7 +14,7 @@
     - debug: 
         msg: 
         - "Current version is {{ ansible_net_version }}"
-        - "Upgrade image is 12.2.55-SE12"
+        - "Upgrade image is {{ upgrade_ios_version }}"
 
     - debug: 
         msg: 
@@ -109,9 +109,7 @@
        - "Current version is {{ ansible_net_version }}"
 
    - name: ASSERT THAT THE IOS VERSION IS CORRECT
-   
-     vars: 
-       upgrade_ios_version: 12.2(55)SE12
+
 
      assert:
        that:
