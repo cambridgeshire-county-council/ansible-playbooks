@@ -77,7 +77,7 @@
    - name: Change Boot Variable to new image 
      ios_config: 
        commands: 
-         - "boot system flash:c2960-lanbasek9-mz.122-55.SE12.bin"
+         - "boot system flash:cat9k_iosxe.16.06.06.SPA-02.bin"
        save_when: always 
 
 ## Reload the device 
