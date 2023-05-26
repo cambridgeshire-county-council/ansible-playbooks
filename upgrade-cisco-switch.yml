@@ -67,7 +67,7 @@
    - name: Copy Image // This could take up to 4 minutes
      net_put:
        src: "/var/images/cat9k_iosxe.16.06.06.SPA.bin"
-       dest: "flash:/cat9k_iosxe.16.06.06.SPA-02.bin"
+       dest: "cat9k_iosxe.16.06.06.SPA-02.bin"
      vars:
        ansible_command_timeout: 600
        ansible_network_cli_ssh_type: paramiko
