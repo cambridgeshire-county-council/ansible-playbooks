@@ -64,12 +64,12 @@
        save_when: always 
 
 ## copy image
-   - name: Copy Image // This could take up to 4 minutes
+   - name: Copy Image // This could take a while...
      net_put:
        src: "/var/images/cat9k_iosxe.16.06.06.SPA.bin"
        dest: "flash:/cat9k_iosxe.16.06.06.SPA-02.bin"
      vars:
-       ansible_command_timeout: 1800
+       ansible_command_timeout: 3600
        ansible_network_cli_ssh_type: paramiko
 
 ## Change the Boot Variable to the new image 
