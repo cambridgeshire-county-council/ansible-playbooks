@@ -10,4 +10,5 @@
   #      #dest: "~/network-programmability/images/cat9k_iosxe.16.06.06.SPA.bin"
   #    vars: 
   #      ansible_network_cli_ssh_type: libssh
-     local_action: command scp 10.4.31.242:cat9k_iosxe.16.06.06.SPA.bin /var/images/test.bin
+     delegate_to: localhost
+     command: scp 10.4.31.242:cat9k_iosxe.16.06.06.SPA.bin /var/images/test.bin
