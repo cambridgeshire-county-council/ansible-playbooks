@@ -57,13 +57,15 @@
        content: "{{config.stdout[0]}}"
        dest: "~/network-programmability/backups/{{hostvars.localhost.DTG}}/{{ inventory_hostname }}-{{hostvars.localhost.DTG}}-config.txt"
 
-## SAVE the Running Config 
-
+## Save running config 
    - name: Save running config 
      ios_config:
        save_when: always 
-
+       
 ## copy image
+- name: Copy Image
+  hosts: switches
+
    - name: Copy Image // This could take a while...
      net_put:
        src: "/var/images/cat9k_iosxe.16.06.06.SPA.bin"
@@ -73,6 +75,8 @@
        ansible_network_cli_ssh_type: paramiko
 
 ## Change the Boot Variable to the new image 
+- name: Change Boot image
+  hosts: switches
 
    - name: Change Boot Variable to new image 
      ios_config: 
