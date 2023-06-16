@@ -4,6 +4,7 @@
 - name: Change Boot image
   hosts: switches
 
+  tasks:
    - name: Change Boot Variable to new image 
      ios_config: 
        commands: 

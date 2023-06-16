@@ -61,11 +61,12 @@
    - name: Save running config 
      ios_config:
        save_when: always 
-       
+
 ## copy image
 - name: Copy Image
   hosts: switches
 
+  tasks:
    - name: Copy Image // This could take a while...
      net_put:
        src: "/var/images/cat9k_iosxe.16.06.06.SPA.bin"
