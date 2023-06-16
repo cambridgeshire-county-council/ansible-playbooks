@@ -1,0 +1,49 @@
+---
+
+## Change the Boot Variable to the new image 
+- name: Change Boot image
+  hosts: switches
+
+   - name: Change Boot Variable to new image 
+     ios_config: 
+       commands: 
+         - "boot system flash:cat9k_iosxe.16.06.06.SPA-02.bin"
+       save_when: always 
+
+## Reload the device 
+
+   - name: Reload the Device 
+     cli_command: 
+       command: reload
+       prompt: 
+         - confirm
+       answer: 
+         - 'y'
+         
+## Wait for Reachability to the device 
+
+   - name: Wait for device to come back online
+     wait_for:
+       host: "{{ inventory_hostname }}"
+       port: 22
+       delay: 90
+     delegate_to: localhost
+
+## Check current image 
+
+   - name: Check Image Version      
+     ios_facts:
+
+   - debug: 
+       msg: 
+       - "Current version is {{ ansible_net_version }}"
+
+   - name: ASSERT THAT THE IOS VERSION IS CORRECT
+
+
+     assert:
+       that:
+         - upgrade_ios_version == ansible_net_version
+   - debug: 
+       msg: 
+       - "Software Upgrade has been completed"
