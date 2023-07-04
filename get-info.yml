@@ -1,0 +1,20 @@
+---
+  - name: Get switch info
+    hosts: switches
+    
+    vars: 
+      ansible_network_os: ios
+      ansible_connection_network: network_cli
+      ansible_command_timeout: 90
+      
+    tasks:
+    - name: Gather info
+      cisco.ios.ios_facts:
+        gather_subset: all
+      register: facts
+    - name: Output info
+      debug:
+        msg: |-
+          Hostname: {{ facts.ansible_facts.ansible_net_hostname }}
+          Image: {{ facts.ansible_facts.ansible_net_image }}
+          IPs: {{ facts.ansible_facts.ansible_net_all_ip_address}}

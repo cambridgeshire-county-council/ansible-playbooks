@@ -52,18 +52,17 @@
        commands: show run  
      register: config
 
-   - name: Save output to ~/network-programmability/backups/
+   - name: Save output to ~/backups/
      copy:
        content: "{{config.stdout[0]}}"
-       dest: "~/network-programmability/backups/{{hostvars.localhost.DTG}}/{{ inventory_hostname }}-{{hostvars.localhost.DTG}}-config.txt"
+       dest: "~/backups/{{hostvars.localhost.DTG}}/{{ inventory_hostname }}-{{hostvars.localhost.DTG}}-config.txt"
 
-## Save running config 
    - name: Save running config 
      ios_config:
        save_when: always 
 
 ## copy image
-- name: Copy Image
+- name: Copy Image to switch
   hosts: switches
 
   tasks:
