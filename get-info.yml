@@ -17,4 +17,4 @@
         msg: |-
           Hostname: {{ facts.ansible_facts.ansible_net_hostname }}
           Image: {{ facts.ansible_facts.ansible_net_image }}
-          IPs: {{ facts.ansible_facts.ansible_net_all_ipv4_address}}
+          IPs: {{ facts.ansible_facts.ansible_net_all_ipv4_addresses}}
