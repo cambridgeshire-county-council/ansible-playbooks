@@ -13,13 +13,12 @@
 # Play 1: Check current version
 - name: Check current CISCO IOS version
   hosts: switches
-  when: run_play_1
-
   vars: 
     upgrade_ios_version: 1.1.1
 
   tasks:
     - name: CHECK CURRENT VERSION
+      when: run_play_1
       ios_facts:
 
     - debug: 
@@ -37,19 +36,22 @@
 - name: Create backup folder
   hosts: localhost
   connection: local
-  when: run_play_2
+   
 
   tasks:
    - name: Get ansible date/time facts
+     when: run_play_2
      setup:
        filter: "ansible_date_time"
        gather_subset: "!all"
 
    - name: Store DTG as fact
+     when: run_play_2
      set_fact:
        DTG: "{{ ansible_date_time.date }}"
 
    - name: Create Directory {{hostvars.localhost.DTG}}
+     when: run_play_2
      file:
       path: ~/network-programmability/backups/{{hostvars.localhost.DTG}}
       state: directory
@@ -58,30 +60,32 @@
 # Play 3: Backup existing config
 - name: Backup existing config
   hosts: switches 
-  when: run_play_3
 
   tasks:
-   - name: Backup Running Config  
+   - name: Backup Running Config
+     when: run_play_3  
      ios_command:
        commands: show run  
      register: config
 
    - name: Save output to ~/backups/
+     when: run_play_3
      copy:
        content: "{{config.stdout[0]}}"
        dest: "~/backups/{{hostvars.localhost.DTG}}/{{ inventory_hostname }}-{{hostvars.localhost.DTG}}-config.txt"
 
    - name: Save running config 
+     when: run_play_3
      ios_config:
        save_when: always 
 
 # Play 4: Copy image
 - name: Copy Image to switch
   hosts: switches
-  when: run_play_4
 
   tasks:
    - name: Copy Image // This could take a while...
+     when: run_play_4
      net_put:
        src: "/var/images/cat9k_iosxe.16.06.06.SPA.bin"
        dest: "flash:/cat9k_iosxe.16.06.06.SPA-02.bin"
@@ -92,17 +96,18 @@
 # Play 5: Change the Boot Variable to the new image 
 - name: Change Boot image
   hosts: switches
-  when: run_play_5
-
+  
   tasks:
    - name: Change Boot Variable to new image 
+     when: run_play_5
      ios_config: 
        commands: 
          - "boot system flash:cat9k_iosxe.16.06.06.SPA-02.bin"
        save_when: always 
 
    ## Reload the device 
-   - name: Reload the Device 
+   - name: Reload the Device
+     when: run_play_5 
      cli_command: 
        command: reload
        prompt: 
@@ -112,6 +117,7 @@
          
    # Wait for Reachability to the device 
    - name: Wait for device to come back online
+     when: run_play_5
      wait_for:
        host: "{{ inventory_hostname }}"
        port: 22
@@ -120,6 +126,7 @@
 
    # Check current image 
    - name: Check Image Version      
+     when: run_play_5
      ios_facts:
 
    - debug: 
@@ -128,6 +135,7 @@
 
    
    - name: ASSERT THAT THE IOS VERSION IS CORRECT
+     when: run_play_5
      assert:
        that:
          - upgrade_ios_version == ansible_net_version
