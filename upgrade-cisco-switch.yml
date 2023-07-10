@@ -9,7 +9,7 @@
 
   tasks:
     - name: CHECK CURRENT VERSION
-      when: run_play_1
+      when: run_play_1|bool == true
       ios_facts:
 
     - debug: 
@@ -30,18 +30,18 @@
 
   tasks:
    - name: Get ansible date/time facts
-     when: run_play_2
+     when: run_play_2|bool == true
      setup:
        filter: "ansible_date_time"
        gather_subset: "!all"
 
    - name: Store DTG as fact
-     when: run_play_2
+     when: run_play_2|bool == true
      set_fact:
        DTG: "{{ ansible_date_time.date }}"
 
    - name: Create Directory {{hostvars.localhost.DTG}}
-     when: run_play_2
+     when: run_play_2|bool == true
      file:
       path: ~/backups/{{hostvars.localhost.DTG}}
       state: directory
@@ -53,19 +53,19 @@
 
   tasks:
    - name: Backup Running Config
-     when: run_play_3  
+     when: run_play_3|bool == true  
      ios_command:
        commands: show run  
      register: config
 
    - name: Save output to ~/backups/
-     when: run_play_3
+     when: run_play_3|bool == true
      copy:
        content: "{{config.stdout[0]}}"
        dest: "~/backups/{{hostvars.localhost.DTG}}/{{ inventory_hostname }}-{{hostvars.localhost.DTG}}-config.txt"
 
    - name: Save running config 
-     when: run_play_3
+     when: run_play_3|bool == true
      ios_config:
        save_when: always 
 
@@ -75,7 +75,7 @@
 
   tasks:
    - name: Copy Image // This could take a while...
-     when: run_play_4
+     when: run_play_4|bool == true
      net_put:
        src: "/var/images/cat9k_iosxe.16.06.06.SPA.bin"
        dest: "flash:/cat9k_iosxe.16.06.06.SPA-02.bin"
@@ -89,7 +89,7 @@
   
   tasks:
    - name: Change Boot Variable to new image 
-     when: run_play_5
+     when: run_play_5|bool == true
      ios_config: 
        commands: 
          - "boot system flash:cat9k_iosxe.16.06.06.SPA-02.bin"
@@ -97,7 +97,7 @@
 
    ## Reload the device 
    - name: Reload the Device
-     when: run_play_5 
+     when: run_play_5|bool == true
      cli_command: 
        command: reload
        prompt: 
@@ -107,7 +107,7 @@
          
    # Wait for Reachability to the device 
    - name: Wait for device to come back online
-     when: run_play_5
+     when: run_play_5|bool == true
      wait_for:
        host: "{{ inventory_hostname }}"
        port: 22
@@ -116,7 +116,7 @@
 
    # Check current image 
    - name: Check Image Version      
-     when: run_play_5
+     when: run_play_5|bool == true
      ios_facts:
 
    - debug: 
@@ -125,7 +125,7 @@
 
    
    - name: ASSERT THAT THE IOS VERSION IS CORRECT
-     when: run_play_5
+     when: run_play_5|bool == true
      assert:
        that:
          - upgrade_ios_version == ansible_net_version
