@@ -43,7 +43,7 @@
    - name: Create Directory {{hostvars.localhost.DTG}}
      when: run_play_2
      file:
-      path: ~/network-programmability/backups/{{hostvars.localhost.DTG}}
+      path: ~/backups/{{hostvars.localhost.DTG}}
       state: directory
   run_once: true
 
