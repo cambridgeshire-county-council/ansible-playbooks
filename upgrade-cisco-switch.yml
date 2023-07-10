@@ -1,8 +1,16 @@
 ---
 # Ansible Playbook to upgrade Cisco IOS 
+vars:
+  run_play_1: true
+  run_play_2: false
+  run_play_3: false
+  run_play_4: false
+  run_play_5: false
 
-- name: Check CISCO IOS version
+# Play 1: Check current version
+- name: Check current CISCO IOS version
   hosts: switches
+  when: run_play_1
 
   vars: 
     upgrade_ios_version: 1.1.1
@@ -20,12 +28,13 @@
         msg: 
         - "Image is not compliant and will be upgraded"
       when: ansible_net_version != upgrade_ios_version
-      
 
 
+# Play 2: Create backup folder
 - name: Create backup folder
   hosts: localhost
   connection: local
+  when: run_play_2
 
   tasks:
    - name: Get ansible date/time facts
@@ -43,8 +52,10 @@
       state: directory
   run_once: true
 
+# Play 3: Backup existing config
 - name: Backup existing config
   hosts: switches 
+  when: run_play_3
 
   tasks:
    - name: Backup Running Config  
@@ -61,9 +72,10 @@
      ios_config:
        save_when: always 
 
-## copy image
+# Play 4: Copy image
 - name: Copy Image to switch
   hosts: switches
+  when: run_play_4
 
   tasks:
    - name: Copy Image // This could take a while...
@@ -74,9 +86,10 @@
        ansible_command_timeout: 3600
        ansible_network_cli_ssh_type: paramiko
 
-## Change the Boot Variable to the new image 
+# Play 5: Change the Boot Variable to the new image 
 - name: Change Boot image
   hosts: switches
+  when: run_play_5
 
    - name: Change Boot Variable to new image 
      ios_config: 
@@ -84,8 +97,7 @@
          - "boot system flash:cat9k_iosxe.16.06.06.SPA-02.bin"
        save_when: always 
 
-## Reload the device 
-
+   ## Reload the device 
    - name: Reload the Device 
      cli_command: 
        command: reload
@@ -94,8 +106,7 @@
        answer: 
          - 'y'
          
-## Wait for Reachability to the device 
-
+   # Wait for Reachability to the device 
    - name: Wait for device to come back online
      wait_for:
        host: "{{ inventory_hostname }}"
@@ -103,8 +114,7 @@
        delay: 90
      delegate_to: localhost
 
-## Check current image 
-
+   # Check current image 
    - name: Check Image Version      
      ios_facts:
 
@@ -112,9 +122,8 @@
        msg: 
        - "Current version is {{ ansible_net_version }}"
 
+   
    - name: ASSERT THAT THE IOS VERSION IS CORRECT
-
-
      assert:
        that:
          - upgrade_ios_version == ansible_net_version
