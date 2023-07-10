@@ -27,11 +27,10 @@
 - name: Create backup folder
   hosts: localhost
   connection: local
-  vars:
 
   tasks:
    - name: Get ansible date/time facts
-     when: run_play_2
+     when: run_play_1
      setup:
        filter: "ansible_date_time"
        gather_subset: "!all"
