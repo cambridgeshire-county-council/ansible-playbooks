@@ -30,7 +30,7 @@
 
   tasks:
    - name: Get ansible date/time facts
-     when: run_play_1
+     when: run_play_2
      setup:
        filter: "ansible_date_time"
        gather_subset: "!all"
