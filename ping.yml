@@ -6,7 +6,7 @@
       ansible_network_os: ios
       ansible_connection: network_cli
       ansible_command_timeout: 90
-      ping: false
+      ping: true
 
     tasks:
     - name: Gather info
