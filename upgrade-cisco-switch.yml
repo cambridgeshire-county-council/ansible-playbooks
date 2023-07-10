@@ -27,7 +27,7 @@
 - name: Create backup folder
   hosts: localhost
   connection: local
-   
+  vars:
 
   tasks:
    - name: Get ansible date/time facts
