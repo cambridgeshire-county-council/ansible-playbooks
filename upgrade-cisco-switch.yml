@@ -94,6 +94,7 @@
   hosts: switches
   when: run_play_5
 
+  tasks:
    - name: Change Boot Variable to new image 
      ios_config: 
        commands: 
