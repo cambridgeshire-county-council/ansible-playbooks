@@ -20,6 +20,7 @@
         msg: 
         - "Image is not compliant and will be upgraded"
       when: ansible_net_version != upgrade_ios_version
+      
 
 
 - name: Create backup folder
