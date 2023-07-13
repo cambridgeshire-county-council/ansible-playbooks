@@ -7,5 +7,4 @@
   tasks:
     - name: Run command to get free space
       ios_config:
-        commands:
-          - show file systems
+        commands: show file systems
