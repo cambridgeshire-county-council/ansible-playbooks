@@ -8,4 +8,4 @@
     - name: Run command to get free space
       ios_config:
         commands:
-          - 'show file systems'
+          - show file systems
