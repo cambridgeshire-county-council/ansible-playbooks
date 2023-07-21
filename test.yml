@@ -2,10 +2,9 @@
 
 - name: Check disk space
   hosts: switches
-  gather_facts: no
 
   tasks:
-    - name: Run command to get free space
-      ios_config:
-        commands:
-          - "show file systems"
+   - name: Run command to get free space
+     ios_config:
+       commands: 
+         - "show file systems"
