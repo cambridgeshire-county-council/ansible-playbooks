@@ -2,7 +2,7 @@
 - name: set boot image name
   hosts: localhost:switches
   vars: 
-    image_name: cat9k_iosxe.16.06.06.SPA.bin
+    image_name: cat9k_iosxe.16.09.03.SPA.bin
   tasks:
   - set_fact: image_name={{ image_name }}
 
@@ -26,18 +26,15 @@
 
   tasks:
    - name: Get ansible date/time facts
-     when: run_play_2|bool == true
      setup:
        filter: "ansible_date_time"
        gather_subset: "!all"
 
    - name: Store DTG as fact
-     when: run_play_2|bool == true
      set_fact:
        DTG: "{{ ansible_date_time.date }}"
 
    - name: Create Directory {{hostvars.localhost.DTG}}
-     when: run_play_2|bool == true
      file:
       path: ~/backups/{{hostvars.localhost.DTG}}
       state: directory
@@ -129,7 +126,6 @@
 
 - name: Change Boot image
   hosts: switches
-  
   tasks:
    - name: Change Boot Variable to new image 
      ios_config: 
