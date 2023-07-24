@@ -60,7 +60,7 @@
        save_when: always 
 
 
-- name: check bin image size
+- name: Check image size and md5 checksum
   hosts: localhost
   gather_facts: no
   tasks:
@@ -110,6 +110,20 @@
         success_msg: Enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and {{ free_space[0] }}b available
         fail_msg: Not enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and only {{ free_space[0] }}b available
         quiet: false
+
+# Play 4: Copy image
+- name: Copy Image to switch
+  hosts: switches
+
+  tasks:
+   - name: Copy Image // This could take a while...
+     when: run_play_4|bool == true
+     net_put:
+       src: "/var/images/{{ image_name }}"
+       dest: "flash:/{{ image_name }}"
+     vars:
+       ansible_command_timeout: 3600
+       ansible_network_cli_ssh_type: paramiko
 
     - name: get md5 of copied file
       ios_command:
