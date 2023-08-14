@@ -97,11 +97,11 @@
  
     - name: Reload the Device
       cli_command: 
-      command: reload
-      prompt: 
-        - confirm
-      answer: 
-        - 'y'
+        command: reload
+        prompt: 
+          - confirm
+        answer: 
+          - 'y'
          
     - name: Wait for device to come back online
       wait_for:
