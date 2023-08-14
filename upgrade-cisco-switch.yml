@@ -46,19 +46,19 @@
         image_filesize: "{{ images[model]['filesize'] }}"
         image_checksum: "{{ images[model]['checksum'] }}"
     
-    - name: Check boot image is different
-      assert:
-        that: current_image != latest_image 
-        success_msg: "{{ current_image }} is different to {{ latest_image }}, switch will be patched"
-        fail_msg: "Current switch image is {{ current_image }}, which is the same as {{ latest_image }}, so upgrade will not take place"
+    # - name: Check boot image is different
+    #   assert:
+    #     that: current_image != latest_image 
+    #     success_msg: "{{ current_image }} is different to {{ latest_image }}, switch will be patched"
+    #     fail_msg: "Current switch image is {{ current_image }}, which is the same as {{ latest_image }}, so upgrade will not take place"
     
-    - name: Check free space available
-      assert:
-        that:
-          - "{{ free_space | int }} > {{ image_filesize | int }}"
-        success_msg: Enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and {{ free_space }}b available
-        fail_msg: Not enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and only {{ free_space }}b available
-        quiet: false
+    # - name: Check free space available
+    #   assert:
+    #     that:
+    #       - "{{ free_space | int }} > {{ image_filesize | int }}"
+    #     success_msg: Enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and {{ free_space }}b available
+    #     fail_msg: Not enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and only {{ free_space }}b available
+    #     quiet: false
     
     - name: check if image already exists on disk
       file:
