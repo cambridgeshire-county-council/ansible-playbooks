@@ -68,8 +68,8 @@
     # - name: check if enough disk space to copy
     
     - name: copy image
-      
       ios_command:
+        commands:
         - "copy tftp://134.22.15.8/{{ latest_image }} flash:"
       when: 
         - current_image != latest_image
