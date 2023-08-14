@@ -102,6 +102,7 @@
           - confirm
         answer: 
           - 'y'
+
          
     - name: Wait for device to come back online
       wait_for:
