@@ -98,7 +98,7 @@
           - "boot system flash:{{ image_name }}"
         save_when: always 
        when: 
-        - current_image != latest_image
+         - current_image != latest_image
 
     - name: Reload the Device
       cli_command: 
