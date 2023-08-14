@@ -48,9 +48,9 @@
     
     - name: Check boot image is different
       assert:
-        that: ansible_net_image[6:] != image_name 
-        success_msg: "{{ ansible_net_image[6:] }} is different to {{ image_name }}, switch will be patched"
-        fail_msg: "Current switch image is {{ ansible_net_image[6:] }}, which is the same as {{ image_name }}, so upgrade will not take place"
+        that: current_image != latest_image 
+        success_msg: "{{ current_image }} is different to {{ latest_image }}, switch will be patched"
+        fail_msg: "Current switch image is {{ current_image }}, which is the same as {{ latest_image }}, so upgrade will not take place"
     
     - name: Check free space available
       assert:
