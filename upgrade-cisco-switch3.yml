@@ -1,0 +1,211 @@
+---
+- name: Create backup folder
+  hosts: localhost
+  connection: local
+
+  tasks:
+   - name: Get ansible date/time facts
+     setup:
+       filter: "ansible_date_time"
+       gather_subset: "!all"
+
+   - name: Store DTG as fact
+     set_fact:
+       DTG: "{{ ansible_date_time.date }}"
+
+   - name: Create Directory {{hostvars.localhost.DTG}}
+     file:
+      path: ~/backups/{{hostvars.localhost.DTG}}
+      state: directory
+  run_once: true
+
+- name: fhsdkfhsdkf
+  hosts: switches
+  vars_files: vars/image_list.yml
+  tasks:
+    - name: Gather info
+      cisco.ios.ios_facts:
+        gather_subset: min
+      register: facts
+    - name: Run command to get free space
+      ios_command:
+        commands:
+          - show file systems
+        wait_for:
+          - result[0] contains flash
+      register: result
+    - set_fact:
+        free_space: "{{ (result.stdout | regex_findall('(\\d*)\\s*[a-z]*\\s*[a-z]*\\s*flash:'))[0]}}"
+        model: "{{ (facts.ansible_facts.ansible_net_image | regex_search('.*:(.*)-.*','\\1'))[0] }}"
+        current_image: "{{ (facts.ansible_facts.ansible_net_image| regex_search('.*:(.*)','\\1'))[0] }}"
+    - set_fact:
+        latest_image: "{{ images[model]['image_name'] }}"
+        image_filesize: "{{ images[model]['filesize'] }}"
+        image_checksum: "{{ images[model]['checksum'] }}"
+    - name: check images are different
+    - name: check if image already exists on disk
+    - name: check if enough disk space to copy
+    - name: copy image
+    - name: set boot image
+    - name:L reboot
+    -name: delete old image
+
+
+    - name: output current image
+
+- name: Check current CISCO IOS version
+  hosts: switches
+  tasks:
+    - name: Get current boot image
+      ios_facts:
+    - debug: 
+        msg: 
+        - "Current version is {{ ansible_net_image[6:] }}"
+
+    - name: Check boot image is different
+      assert:
+        that: ansible_net_image[6:] != image_name 
+        success_msg: "{{ ansible_net_image[6:] }} is different to {{ image_name }}, switch will be patched"
+        fail_msg: "Current switch image is {{ ansible_net_image[6:] }}, which is the same as {{ image_name }}, so upgrade will not take place"
+
+
+
+# Play 3: Backup existing config
+- name: Backup existing config
+  hosts: switches 
+
+  tasks:
+   - name: Backup Running Config
+     ios_command:
+       commands: show run  
+     register: config
+
+   - name: Save output to ~/backups/
+     copy:
+       content: "{{config.stdout[0]}}"
+       dest: "~/backups/{{hostvars.localhost.DTG}}/{{ inventory_hostname }}-{{hostvars.localhost.DTG}}-config.txt"
+
+   - name: Save running config 
+     ios_config:
+       save_when: always 
+
+
+- name: Check image size and md5 checksum
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: check file size
+      stat:
+        path: /var/images/{{ image_name }}
+      register: file_info
+      changed_when: false
+    
+    - name: get file_checksum
+      command: md5sum /var/images/{{ image_name }}
+      register: file_checksum
+      changed_when: false
+
+    - name: register file size and md5 checksum
+      ansible.builtin.set_fact:
+        file_size: "{{ file_info.stat.size }}"
+        md5_checksum: "{{ file_checksum.stdout[0:32] }}"
+    
+    - name: Output filesize fact
+      debug:
+        var: file_size
+    - name: Output checksum fact
+      debug:
+        var: md5_checksum
+
+
+- name: Check disk space
+  hosts: switches
+  gather_facts: no
+  tasks: 
+    - name: Run command to get free space
+      ios_command:
+        commands:
+          - show file systems
+        wait_for:
+          - result[0] contains flash
+      register: result
+    - name: Set free space fact
+      ansible.builtin.set_fact:
+        free_space: "{{ result.stdout | regex_findall('(\\d*)\\s*[a-z]*\\s*[a-z]*\\s*flash:')}}"
+
+    - name: Check free space available
+      assert:
+        that:
+          - "{{free_space[0] | int}} > {{hostvars['localhost']['file_size'] | int }}"
+        success_msg: Enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and {{ free_space[0] }}b available
+        fail_msg: Not enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and only {{ free_space[0] }}b available
+        quiet: false
+
+# Play 4: Copy image
+- name: Copy Image to switch
+  hosts: switches
+
+  tasks:
+   - name: Copy Image // This could take a while...
+     when: run_play_4|bool == true
+     net_put:
+       src: "/var/images/{{ image_name }}"
+       dest: "flash:/{{ image_name }}"
+     vars:
+       ansible_command_timeout: 3600
+       ansible_network_cli_ssh_type: paramiko
+
+    - name: get md5 of copied file
+      ios_command:
+        commands:
+          - "verify /md5 flash:{{ image_name }}"
+        wait_for: result[0] contains Done
+      register: result
+
+    - name: check md5 checksum matches
+      assert:
+        that: result.stdout[0][-32:] == hostvars['localhost']['md5_checksum']
+        success_msg: File copy succeeded, copied file checksum {{ result.stdout[0][-32:] }} matches original checksum {{ hostvars['localhost']['md5_checksum'] }}
+        fail_msg: File copy failed, copied file checksum {{ result.stdout[0][-32:] }} different from original checksum {{ hostvars['localhost']['md5_checksum'] }}
+
+- name: Change Boot image
+  hosts: switches
+  tasks:
+   - name: Change Boot Variable to new image 
+     ios_config: 
+       commands: 
+         - "boot system flash:{{ image_name }}"
+       save_when: always 
+
+   ## Reload the device 
+   - name: Reload the Device
+     cli_command: 
+       command: reload
+       prompt: 
+         - confirm
+       answer: 
+         - 'y'
+         
+   # Wait for Reachability to the device 
+   - name: Wait for device to come back online
+     wait_for:
+       host: "{{ inventory_hostname }}"
+       port: 22
+       delay: 90
+     delegate_to: localhost
+
+   # Check current image 
+   - name: Check Image Version      
+     ios_facts:
+
+   - debug: 
+       msg: 
+       - "Current boot image is {{ ansible_net_image[6:] }}"
+   
+   - name: Assert upgrade complete
+     assert:
+       that:
+         - image_name == ansible_net_image[6:]
+   - debug: 
+       msg: 
+       - "Software Upgrade has been completed"
