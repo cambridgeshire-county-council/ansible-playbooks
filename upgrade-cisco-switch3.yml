@@ -19,7 +19,7 @@
       state: directory
   run_once: true
 
-- name: fhsdkfhsdkf
+- name: Gather Switch info 
   hosts: switches
   vars_files: vars/image_list.yml
   tasks:
@@ -27,6 +27,7 @@
       cisco.ios.ios_facts:
         gather_subset: min
       register: facts
+    
     - name: Run command to get free space
       ios_command:
         commands:
@@ -34,24 +35,63 @@
         wait_for:
           - result[0] contains flash
       register: result
+    
     - set_fact:
         free_space: "{{ (result.stdout | regex_findall('(\\d*)\\s*[a-z]*\\s*[a-z]*\\s*flash:'))[0]}}"
         model: "{{ (facts.ansible_facts.ansible_net_image | regex_search('.*:(.*)-.*','\\1'))[0] }}"
         current_image: "{{ (facts.ansible_facts.ansible_net_image| regex_search('.*:(.*)','\\1'))[0] }}"
+    
     - set_fact:
         latest_image: "{{ images[model]['image_name'] }}"
         image_filesize: "{{ images[model]['filesize'] }}"
         image_checksum: "{{ images[model]['checksum'] }}"
-    - name: check images are different
+    
+    - name: Check boot image is different
+      assert:
+        that: ansible_net_image[6:] != image_name 
+        success_msg: "{{ ansible_net_image[6:] }} is different to {{ image_name }}, switch will be patched"
+        fail_msg: "Current switch image is {{ ansible_net_image[6:] }}, which is the same as {{ image_name }}, so upgrade will not take place"
+    
+    - name: Check free space available
+      assert:
+        that:
+          - "{{ free_space | int }} > {{ image_filesize | int }}"
+        success_msg: Enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and {{ free_space }}b available
+        fail_msg: Not enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and only {{ free_space }}b available
+        quiet: false
+    
     - name: check if image already exists on disk
-    - name: check if enough disk space to copy
+      file:
+        path: "flash:/{{ latest_image }}"
+        state: file
+      register: file_status
+    # - name: check if enough disk space to copy
+    
     - name: copy image
+      when: 
+        - current_image != latest_image
+        - not(file_status.stat.exists)
+        - free_space > image_filesize
+      ios_command:
+        - "copy tftp://134.22.15.8/{{ latest_image }} flash:"
+    - name: Check MD5 checksum of copied file
+      ios_command:
+        commands:
+          - "verify /md5 flash:{{ image_name }}"
+        wait_for: result[0] contains Done
+      register: result
+    - name: check md5 checksum matches
+      assert:
+        that: result.stdout[0][-32:] == hostvars['localhost']['md5_checksum']
+        success_msg: File copy succeeded, copied file checksum {{ result.stdout[0][-32:] }} matches original checksum {{ hostvars['localhost']['md5_checksum'] }}
+        fail_msg: File copy failed, copied file checksum {{ result.stdout[0][-32:] }} different from original checksum {{ hostvars['localhost']['md5_checksum'] }}
     - name: set boot image
-    - name:L reboot
-    -name: delete old image
+      when: 
+    # - name:L reboot
+    # -name: delete old image
 
 
-    - name: output current image
+    # - name: output current image
 
 - name: Check current CISCO IOS version
   hosts: switches
