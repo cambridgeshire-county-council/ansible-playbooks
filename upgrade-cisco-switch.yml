@@ -70,7 +70,7 @@
     - name: copy image
       ios_command:
         commands:
-        - "copy tftp://134.22.15.8/{{ latest_image }} flash:"
+        - "copy tftp://134.22.15.8/{{ model }}/{{ latest_image }} flash:"
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
