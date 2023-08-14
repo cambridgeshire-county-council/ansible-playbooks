@@ -68,18 +68,21 @@
     # - name: check if enough disk space to copy
     
     - name: copy image
+      
+      ios_command:
+        - "copy tftp://134.22.15.8/{{ latest_image }} flash:"
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
         - free_space > image_filesize
-      ios_command:
-        - "copy tftp://134.22.15.8/{{ latest_image }} flash:"
+
     - name: Check MD5 checksum of copied file
       ios_command:
         commands:
           - "verify /md5 flash:{{ image_name }}"
         wait_for: result[0] contains Done
       register: result
+
     - name: check md5 checksum matches
       assert:
         that: result.stdout[0][-32:] == hostvars['localhost']['md5_checksum']
