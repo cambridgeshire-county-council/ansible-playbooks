@@ -61,15 +61,14 @@
     #     quiet: false
     
     - name: check if image already exists on disk
-      file:
-        path: "flash:/{{ latest_image }}"
-        state: file
+      stat:
+        path: "/{{ latest_image }}"
       register: file_status
     
     - name: copy image
       ios_command:
         commands:
-        - "copy tftp://134.22.15.8/{{ model }}/{{ latest_image }} flash:"
+        - "copy tftp://134.22.15.8/{{ model }}/{{ latest_image }} ."
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
