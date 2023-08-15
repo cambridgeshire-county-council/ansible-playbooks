@@ -118,19 +118,15 @@
       when: 
         - current_image != latest_image
 
-    # Check current image 
     - name: Check Image Version      
       ios_facts:
     - set_fact:
-        current_image: "{{ (facts.ansible_facts.ansible_net_image| regex_search('.*:(.*)','\\1'))[0] }}"
-    - debug: 
-        msg: 
-        - "Current boot image is {{ current_image }}"
+        post_update_image: "{{ (facts.ansible_facts.ansible_net_image| regex_search('.*:(.*)','\\1'))[0] }}"
 
     - name: Assert upgrade complete
       assert:
         that:
-          - latest_image == current_image
-    - debug: 
-        msg: 
-        - "Software Upgrade has been completed"
+          - post_update_image == latest_image
+        success_msg: "Switch up-to-date. Latest image is {{ latest_image }}, and installed image is {{ post_update_image }}."
+        fail_msg: "Switch not up-to-date. Latest image is {{ latest_image }}, and installed image is {{ post_update_image }}."
+...
