@@ -68,7 +68,7 @@
     - name: copy image
       ios_command:
         commands:
-        - "copy tftp://134.22.15.8/{{ model }}/{{ latest_image }} ."
+        - "copy tftp://{{ image_location }}/{{ model }}/{{ latest_image }} ."
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
