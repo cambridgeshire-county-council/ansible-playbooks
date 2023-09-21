@@ -4,11 +4,17 @@ images:
     # image_name: asr920-universalk9_npe.17.03.05.SPA.bin
     # filesize: 491472220
     # checksum: 6035fff9ef88f148126732cea964964f
+    
     # 17.3.6
     image_name: asr920-universalk9_npe.17.03.06.SPA.bin
     filesize: 491951654
     checksum: 809539e2124f90c531b02c90a0743cc8
+    
     # # 17.3.7
     # image_name: asr920-universalk9_npe.17.03.07.SPA.bin
     # filesize: 491981390
     # checksum: 25333c80a3ae191f8d96011f1b3cb381
+  c2960x:
+    image_name: c2960x-universalk9-mz.152-7.E4.bin
+    filesize: 26788864
+    checksum: 1b3781db619dcce6a2677628acc15439

@@ -38,27 +38,13 @@
     
     - set_fact:
         free_space: "{{ (result.stdout | regex_findall('(\\d*)\\s*[a-z]*\\s*[a-z]*\\s*flash:'))[0]}}"
-        model: "{{ (facts.ansible_facts.ansible_net_image | regex_search('.*:(.*)-.*','\\1'))[0] }}"
+        #model: "{{ (facts.ansible_facts.ansible_net_image | regex_search('.*:(.*)-.*','\\1'))[0] }}"
         current_image: "{{ (facts.ansible_facts.ansible_net_image| regex_search('.*:(.*)','\\1'))[0] }}"
     
     - set_fact:
         latest_image: "{{ images[model]['image_name'] }}"
         image_filesize: "{{ images[model]['filesize'] }}"
         image_checksum: "{{ images[model]['checksum'] }}"
-    
-    # - name: Check boot image is different
-    #   assert:
-    #     that: current_image != latest_image 
-    #     success_msg: "{{ current_image }} is different to {{ latest_image }}, switch will be patched"
-    #     fail_msg: "Current switch image is {{ current_image }}, which is the same as {{ latest_image }}, so upgrade will not take place"
-    
-    # - name: Check free space available
-    #   assert:
-    #     that:
-    #       - "{{ free_space | int }} > {{ image_filesize | int }}"
-    #     success_msg: Enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and {{ free_space }}b available
-    #     fail_msg: Not enough free space to copy file. Filesize is {{ hostvars['localhost']['file_size'] }}b and only {{ free_space }}b available
-    #     quiet: false
     
     - name: check if image already exists on disk
       stat:
