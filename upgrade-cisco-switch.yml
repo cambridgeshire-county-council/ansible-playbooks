@@ -63,7 +63,7 @@
     - name: Check MD5 checksum of copied file
       ios_command:
         commands:
-          - "verify /md5 flash:{{ image_name }}"
+          - "verify /md5 flash:{{ latest_image }}"
         wait_for: result[0] contains Done
       register: result
       when: 
