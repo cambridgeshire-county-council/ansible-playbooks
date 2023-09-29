@@ -55,6 +55,10 @@
       ios_command:
         commands:
         - "copy tftp://{{ image_location }}/{{ model }}/{{ latest_image }} ."
+        prompt:
+        - "Destination filename [{{ latest_image }}]?"
+        answer:
+        - "\r"
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
