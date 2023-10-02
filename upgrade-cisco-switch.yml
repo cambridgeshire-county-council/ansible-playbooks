@@ -56,7 +56,7 @@
         command:
         - "copy tftp://{{ image_location }}/{{ model }}/{{ latest_image }} ."
         prompt:
-        - "Destination filename [{{ latest_image }}]?"
+        - "Destination filename"
         answer:
         - "\r"
       when: 
