@@ -52,13 +52,11 @@
       register: file_status
     
     - name: copy image
-      cli_command:
-        command:
-        - "copy tftp://{{ image_location }}/{{ model }}/{{ latest_image }} ."
-        prompt:
-        - "Destination filename"
-        answer:
-        - "\r"
+      ios_command:
+        commands:
+          command: "copy tftp://{{ image_location }}/{{ model }}/{{ latest_image }} ."
+          prompt: "Destination filename"
+          answer: "\r"
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
