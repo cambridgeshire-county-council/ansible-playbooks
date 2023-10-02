@@ -45,6 +45,7 @@
         latest_image: "{{ images[model]['image_name'] }}"
         image_filesize: "{{ images[model]['filesize'] }}"
         image_checksum: "{{ images[model]['checksum'] }}"
+        image_path: "{{ images[model]['image_path'] }}"
     
     - name: check if image already exists on disk
       stat:
@@ -54,7 +55,7 @@
     - name: copy image
       ios_command:
         commands:
-          - command: "copy tftp://{{ image_location }}/{{ model }}/{{ latest_image }} ."
+          - command: "copy tftp://{{ image_location }}{{ image_path }}{{ latest_image }} ."
             prompt: "Destination filename"
             answer: "\r"
       when: 
