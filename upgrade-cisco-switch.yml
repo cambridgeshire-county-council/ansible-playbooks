@@ -52,8 +52,8 @@
       register: file_status
     
     - name: copy image
-      ios_command:
-        commands:
+      cli_command:
+        command:
         - "copy tftp://{{ image_location }}/{{ model }}/{{ latest_image }} ."
         prompt:
         - "Destination filename [{{ latest_image }}]?"
