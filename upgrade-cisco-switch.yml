@@ -58,8 +58,8 @@
           - command: "copy tftp://{{ image_location }}{{ image_path }}{{ latest_image }} ."
             prompt: "Destination filename"
             answer: "\r"
-        vars: 
-          ansible_commaind_timeout: 3600
+      vars: 
+        ansible_command_timeout: 3600
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
