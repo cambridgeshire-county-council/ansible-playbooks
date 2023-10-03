@@ -58,6 +58,7 @@
           - command: "copy tftp://{{ image_location }}{{ image_path }}{{ latest_image }} ."
             prompt: "Destination filename"
             answer: "\r"
+        timeout: 3600
       when: 
         - current_image != latest_image
         - not(file_status.stat.exists)
