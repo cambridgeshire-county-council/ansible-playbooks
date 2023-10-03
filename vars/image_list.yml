@@ -7,5 +7,5 @@ images:
   c2960x:
     image_name: c2960x-universalk9-mz.152-7.E4.bin
     filesize: 26788864
-    checksum: 1b3781db619dcce6a2677628acc15439
+    checksum: eb51e6a5f434c5a0ff6f321dcc0dd993
     image_path: /c2960x/ # the path to the imagename specified above
