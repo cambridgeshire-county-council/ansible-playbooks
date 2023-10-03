@@ -105,6 +105,7 @@
         host: "{{ inventory_hostname }}"
         port: 22
         delay: 90
+        timeout: 600
       delegate_to: localhost
       when: 
         - current_image != latest_image
