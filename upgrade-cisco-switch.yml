@@ -85,7 +85,7 @@
     - name: Change Boot Variable to new image 
       ios_config: 
         commands: 
-          - "boot system flash:{{ image_name }}"
+          - "boot system flash:{{ latest_image }}"
         save_when: always 
       when: 
          - current_image != latest_image
