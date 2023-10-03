@@ -76,7 +76,7 @@
 
     - name: check md5 checksum matches
       assert:
-        that: result.stdout[0][-32:] == ['image_checksum']
+        that: result.stdout[0][-32:] == image_checksum
         success_msg: File copy succeeded, copied file checksum {{ result.stdout[0][-32:] }} matches original checksum {{ image_checksum }}
         fail_msg: File copy failed, copied file checksum {{ result.stdout[0][-32:] }} different from original checksum {{ image_checksum }}
       when: 
