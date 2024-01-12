@@ -1,11 +1,84 @@
 images:
+  asr1001-x:
+    image_name: asr1001x-universalk9.17.06.05a.SPA.bin
+    filesize: 726865018
+    checksum: f8ae26c3600bc9bcce0ccaa51083b4fc
+    image_path: /asr1001-x/
+
   asr920:
-    image_name: asr920-universalk9_npe.17.03.07.SPA.bin
-    filesize: 491981390
-    checksum: 25333c80a3ae191f8d96011f1b3cb381
+    image_name: asr920-universalk9_npe.17.03.08a.SPA.bin
+    filesize: 491954584
+    checksum: 8cee49c973da84f2681bcda9fd2ffce8
     image_path: /asr920/
-  c2960x:
-    image_name: c2960x-universalk9-mz.152-7.E4.bin
-    filesize: 26788864
-    checksum: eb51e6a5f434c5a0ff6f321dcc0dd993
-    image_path: /c2960x/ # the path to the imagename specified above
+
+  c1000:
+    image_name: c1000-universalk9-mz.152-7.E7.bin
+    filesize: 16499712
+    checksum: 1e6f508499c36434f7035b83a4018390
+    image_path: /c1000/
+
+  c2960c-8pc-l_c2960c-12pc-l:
+    image_name: c2960c405-universalk9-mz.152-7.E9.bin
+    filesize: 18181120
+    checksum: f87651c7b40708748594b797a97c2461
+    image_path: /c2960c-8pc-l_c2960c-12pc-l/
+
+  c3560:
+    image_name: c3560-ipbasek9-mz.150-2.SE11.bin
+    filesize: 16664448
+    checksum: b81d9bfd47be75d966d122af60003fef
+    image_path: /c3560/
+
+  c3560cx:
+    image_name: c3560cx-universalk9-mz.152-7.E9.bin
+    filesize: 22968320
+    checksum: 6a7d278346f2f2cca86306f74159d067
+    image_path: /c3560cx/
+
+  c3560c-12pc:
+    image_name: c3560c405-universalk9-mz.152-2.E10.bin
+    filesize: 19833856
+    checksum: 69f48c88e6d07d122e22b2b21b134afc
+    image_path: /c3560c-12pc/
+
+  c9200:
+    image_name: cat9k_lite_iosxe.17.09.04.SPA.bin
+    filesize: 470661439
+    checksum: d5871f9e10e6e16ca8643fe1dffe450d
+    image_path: /c9200/	
+
+  c3560x:
+    image_name: c3560e-universalk9-mz.152-4.E10.bin
+    filesize: 26771456
+    checksum: 1e363a4f136c745fa9d069924320d85c
+    image_path: /c3560x/
+
+  c3750:
+    image_name: c3750-ipbasek9-mz.122-55.SE12.bin
+    filesize: 12111413
+    checksum: 98d954b0802cbc8c3c810c2ad3b61297
+    image_path: /c3750/
+
+  c9300_c9400_c9500_c9600:
+    image_name: cat9k_iosxe.17.09.04a.SPA.bin
+    filesize: 1251579379
+    checksum: 16a20aa19ec9deb2abe421efddb75fae
+    image_path: /c9300_c9400_c9500_c9600/
+
+  ie1000:
+    image_name: ie1000-universalk9-mz.SPA.1.9.3.bin
+    filesize: 20443667
+    checksum: bc9609665298764c52993a1212dd4547
+    image_path: /ie1000/
+
+  isr1921:
+    image_name: c1900-universalk9-mz.SPA.158-3.M7.bin
+    filesize: 86844008
+    checksum: 033612e1c61ef644d1ff64431eac8f4b
+    image_path: /isr1921/
+
+  isr4321:
+    image_name: isr4300-universalk9_npe.17.06.03a.SPA.bin
+    filesize: 789165506
+    checksum: 7da818b27590d818f7afea3098a92b52
+    image_path: /isr4321/
